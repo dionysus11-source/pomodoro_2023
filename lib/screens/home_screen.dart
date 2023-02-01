@@ -53,6 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void onResetPressed() {
+    if (timer.isActive) {
+      timer.cancel();
+    }
+    setState(() {
+      isRunning = false;
+      totalSeconds = twentyFiveMinutes;
+    });
+  }
+
   String format(int seconds) {
     var duration = Duration(seconds: seconds);
     return (duration.toString().split(".").first.substring(2, 7));
@@ -62,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Column(children: [
+      body:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Flexible(
             flex: 1,
             child: Container(
@@ -78,9 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )),
         Flexible(
-            flex: 3,
-            child: Center(
-              child: IconButton(
+          flex: 3,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
                 icon: isRunning
                     ? const Icon(Icons.pause_circle_outline)
                     : const Icon(Icons.play_circle_outline),
@@ -88,37 +101,47 @@ class _HomeScreenState extends State<HomeScreen> {
                 iconSize: 150,
                 color: Theme.of(context).cardColor,
               ),
-            )),
+              IconButton(
+                icon: const Icon(
+                  Icons.stop_circle_outlined,
+                ),
+                iconSize: 150,
+                color: Theme.of(context).cardColor,
+                onPressed: onResetPressed,
+              )
+            ],
+          ),
+        ),
         Flexible(
-            flex: 1,
-            child: Row(children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Promodors',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color:
-                              Theme.of(context).textTheme.displayLarge!.color,
-                        ),
+          flex: 1,
+          child: Row(children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Promodors',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Theme.of(context).textTheme.displayLarge!.color,
                       ),
-                      Text(
-                        '$totalPromodos',
-                        style: const TextStyle(fontSize: 58),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      '$totalPromodos',
+                      style: const TextStyle(fontSize: 58),
+                    ),
+                  ],
                 ),
               ),
-            ])),
+            ),
+          ]),
+        ),
       ]),
     );
   }
