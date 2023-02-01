@@ -101,14 +101,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 iconSize: 150,
                 color: Theme.of(context).cardColor,
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.stop_circle_outlined,
-                ),
-                iconSize: 150,
-                color: Theme.of(context).cardColor,
-                onPressed: onResetPressed,
-              )
+              if (!isRunning)
+                IconButton(
+                  icon: const Icon(
+                    Icons.stop_circle_outlined,
+                  ),
+                  iconSize: 150,
+                  color: Theme.of(context).cardColor,
+                  onPressed: onResetPressed,
+                )
             ],
           ),
         ),
