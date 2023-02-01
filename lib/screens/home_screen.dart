@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,12 +9,53 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const twentyFiveMinutes = 1500;
+  int totalSeconds = twentyFiveMinutes;
+  late Timer timer;
+  bool isRunning = false;
+  int totalPromodos = 0;
   @override
   void initState() {
     super.initState();
     //DesktopWindow.setWindowSize(
     //  const Size(600, 800),
     //);
+  }
+
+  void onTick(Timer timer) {
+    if (totalSeconds == 0) {
+      setState(() {
+        totalPromodos = totalPromodos + 1;
+        isRunning = false;
+        totalSeconds = twentyFiveMinutes;
+      });
+      timer.cancel();
+    } else {
+      setState(() {
+        totalSeconds = totalSeconds - 1;
+      });
+    }
+  }
+
+  void onStartPressed() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      onTick(timer);
+    });
+    setState(() {
+      isRunning = true;
+    });
+  }
+
+  void onPausePressed() {
+    timer.cancel();
+    setState(() {
+      isRunning = false;
+    });
+  }
+
+  String format(int seconds) {
+    var duration = Duration(seconds: seconds);
+    return (duration.toString().split(".").first.substring(2, 7));
   }
 
   @override
@@ -27,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.bottomCenter,
               decoration: const BoxDecoration(),
               child: Text(
-                '25:00',
+                format(totalSeconds),
                 style: TextStyle(
                   color: Theme.of(context).cardColor,
                   fontSize: 89,
@@ -39,8 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
             flex: 3,
             child: Center(
               child: IconButton(
-                icon: const Icon(Icons.play_circle_outline),
-                onPressed: () {},
+                icon: isRunning
+                    ? const Icon(Icons.pause_circle_outline)
+                    : const Icon(Icons.play_circle_outline),
+                onPressed: isRunning ? onPausePressed : onStartPressed,
                 iconSize: 150,
                 color: Theme.of(context).cardColor,
               ),
@@ -52,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(50),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -65,9 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               Theme.of(context).textTheme.displayLarge!.color,
                         ),
                       ),
-                      const Text(
-                        '0',
-                        style: TextStyle(fontSize: 58),
+                      Text(
+                        '$totalPromodos',
+                        style: const TextStyle(fontSize: 58),
                       ),
                     ],
                   ),
