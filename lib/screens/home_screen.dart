@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
         totalSeconds = twentyFiveMinutes;
       });
       timer.cancel();
+      AudioPlayer player = AudioPlayer();
+      player.play(AssetSource('sound/alarm.wav'));
     } else {
       setState(() {
         totalSeconds = totalSeconds - 1;
